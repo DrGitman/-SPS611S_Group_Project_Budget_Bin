@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "BudgetBin"
+rootProject.name = "Budget Bin Retailer"
 include(":app")
  
