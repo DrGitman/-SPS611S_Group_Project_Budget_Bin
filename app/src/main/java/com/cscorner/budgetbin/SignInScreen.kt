@@ -1,4 +1,4 @@
-package com.BudgetBin.signin  // Replace with your actual package name
+package com.cscorner.budgetbin
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -24,13 +25,15 @@ import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
-import com.cscorner.budgetbin.R  // Adjust this import based on your actual project
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun BudgetBinSignInScreen() {
+fun BudgetBinSignInScreen(navController: NavHostController) {
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
+    val isPreview = LocalInspectionMode.current
 
     Column(
         modifier = Modifier
@@ -41,13 +44,17 @@ fun BudgetBinSignInScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         // Logo
-        Image(
-            painter = painterResource(id = R.drawable.logo),
-            contentDescription = "Logo",
-            modifier = Modifier
-                .height(80.dp)
-                .padding(bottom = 24.dp)
-        )
+        if (!isPreview) {
+            Image(
+                painter = painterResource(id = R.drawable.logo),
+                contentDescription = "Logo",
+                modifier = Modifier
+                    .height(80.dp)
+                    .padding(bottom = 24.dp)
+            )
+        } else {
+            Spacer(modifier = Modifier.height(80.dp))
+        }
 
         // Welcome text
         Text(
@@ -66,22 +73,16 @@ fun BudgetBinSignInScreen() {
             modifier = Modifier.padding(vertical = 8.dp)
         )
 
-        // Email input with centered placeholder
+        // Email input
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            placeholder = {
-                if (email.isEmpty()) {
-                    Text(
-                        text = "Email",
-                        color = Color.Gray
-                    )
-                }
-            },
+            placeholder = { Text(text = "Email", color = Color.Gray) },
             singleLine = true,
             modifier = Modifier
                 .width(310.dp)
-                .height(65.dp)                .padding(top = 16.dp),
+                .height(65.dp)
+                .padding(top = 16.dp),
             shape = RoundedCornerShape(6.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xFF00A86B),
@@ -101,14 +102,7 @@ fun BudgetBinSignInScreen() {
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            placeholder = {
-                if (password.isEmpty()) {
-                    Text(
-                        text = "Password",
-                        color = Color.Gray
-                    )
-                }
-            },
+            placeholder = { Text(text = "Password", color = Color.Gray) },
             singleLine = true,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
@@ -121,7 +115,8 @@ fun BudgetBinSignInScreen() {
             },
             modifier = Modifier
                 .width(310.dp)
-                .height(65.dp)                .padding(top = 12.dp),
+                .height(65.dp)
+                .padding(top = 12.dp),
             shape = RoundedCornerShape(6.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = Color(0xFF00A86B),
@@ -134,7 +129,6 @@ fun BudgetBinSignInScreen() {
             textStyle = TextStyle(textAlign = TextAlign.Left)
         )
 
-        // Forgot password
         Text(
             text = "Forgot your password?",
             color = Color(0xFF00A86B),
@@ -143,9 +137,8 @@ fun BudgetBinSignInScreen() {
                 .padding(start = 178.dp, top = 8.dp)
         )
 
-        // Sign In Button
         Button(
-            onClick = { /* Handle Sign In */ },
+            onClick = { navController.navigate("dashboard") {popUpTo("signin") { inclusive = true }} },
             modifier = Modifier
                 .width(310.dp)
                 .height(65.dp)
@@ -156,12 +149,10 @@ fun BudgetBinSignInScreen() {
             Text("SIGN IN", color = Color.White)
         }
 
-        // Create Account
-        TextButton(onClick = { /* Handle account creation */ }) {
+        TextButton(onClick = { navController.navigate("signup") }) {
             Text("Create New Account", color = Color.Gray)
         }
 
-        // Divider
         Text(
             text = "Or Continue With",
             color = Color(0xFF00A86B),
@@ -169,7 +160,6 @@ fun BudgetBinSignInScreen() {
             modifier = Modifier.padding(top = 16.dp, bottom = 12.dp)
         )
 
-        // Social sign-in row with square gray background
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
@@ -180,19 +170,24 @@ fun BudgetBinSignInScreen() {
                 R.drawable.google_icon,
                 R.drawable.facebook_icon,
                 R.drawable.apple_icon
-            ).forEach {
+            ).forEach { iconId ->
                 Box(
                     modifier = Modifier
-                        .size(48.dp).clip(RoundedCornerShape(5.dp))
-                        .background(Color(0xFFE0E0E0)), // Light gray square background
+                        .size(48.dp)
+                        .clip(RoundedCornerShape(5.dp))
+                        .background(Color(0xFFE0E0E0)),
                     contentAlignment = Alignment.Center
                 ) {
-                    IconButton(onClick = { /* Social login */ }) {
-                        Image(
-                            painter = painterResource(id = it),
-                            contentDescription = "Social Icon",
-                            modifier = Modifier.size(24.dp)
-                        )
+                    if (!isPreview) {
+                        IconButton(onClick = { /* Social login */ }) {
+                            Image(
+                                painter = painterResource(id = iconId),
+                                contentDescription = "Social Icon",
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                    } else {
+                        Spacer(modifier = Modifier.size(24.dp))
                     }
                 }
             }
@@ -203,7 +198,8 @@ fun BudgetBinSignInScreen() {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun BudgetBinSignInPreview() {
+    val navController = rememberNavController()  // Mock controller for preview
     MaterialTheme {
-        BudgetBinSignInScreen()
+        BudgetBinSignInScreen(navController = navController)
     }
 }

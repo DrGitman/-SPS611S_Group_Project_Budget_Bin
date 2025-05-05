@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "811410291276",
+    "project_id": "loginsignup-b975b",
+    "storage_bucket": "loginsignup-b975b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:811410291276:android:a4ec7ac9153aaaa66dd2e9",
+        "android_client_info": {
+          "package_name": "com.cscorner.budgetbin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlfoj24pOjy-vjc2HV3BnrbKJJAUlUleY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
